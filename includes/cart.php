@@ -12,21 +12,22 @@
  * @link http://derekheducation.dreamhosters.com/p3/index.php
  * @license http://opensource.org/licenses/osl-3.0.php Open Software License ("OSL") v. 3.0
  */
-
+//ob_start();
 $showMessage = '';
 if(isset($_POST['addToCart']))
 {
   	//For infomation of order create extra id and assign to $_POST
-  	$itemArray = array(
-      	'itemId'				=>	$_POST['id'],
-        'itemExtraNamePrice'	=>	$_POST['extraNamePrice']
-    );
-	$cartData[] = $itemArray;
+  	if(isset($_POST['extraNamePrice'])){
+      	$itemArray = array(
+      		'itemId'				=>	$_POST['id'],
+        	'itemExtraNamePrice'	=>	$_POST['extraNamePrice']
+    	);
+      
+      	$cartData[] = $itemArray;
   	// test
   	//echo print_r($itemArray, true);
-  
 	foreach($cartData as $keys => $values){	
-    	$extraIdToitem = '';
+    	$extraIdToItem = '';
       	$extraId = '';
         foreach($values['itemExtraNamePrice'] as $result) 
         {
@@ -40,7 +41,17 @@ if(isset($_POST['addToCart']))
         $extraId = $values['itemId'] . $extraIdToItem;
        	$_POST['id'] = $extraId;
     }
-    
+  
+    }else{
+      $itemArray = array(
+      	'itemId'				=>	$_POST['id'],
+        'itemExtraNamePrice'	=>	null
+    	);
+      $cartData[] = $itemArray;
+    }
+  	
+	
+
   	// test
   	//echo '<br>Extra ID: '. $extraId;
   	
@@ -65,7 +76,7 @@ if(isset($_POST['addToCart']))
 					$cartData[$keys]['itemQuantity'] = $cartData[$keys]['itemQuantity'] + $_POST['quantity'];
 				}
 			}
-		}elseif(is_null($_POST['extraNamePrice'])){
+		}elseif(!isset($_POST['extraNamePrice'])){
           	$itemArray = array(
 				'itemId'				=>	$_POST['id'],
 				'itemName'				=>	$_POST['name'],
